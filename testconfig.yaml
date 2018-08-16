@@ -1,0 +1,13 @@
+chambres:
+  suite:
+    name: Suite Pharaon
+    toCheck:
+      - "https://admin.booking.com/hotel/hoteladmin/ical.html?t=xxxx"
+  zen:
+    name: Chambre Zen
+    toCheck:
+      - "https://admin.booking.com/hotel/hoteladmin/ical.html?t=xxxx"
+  horizon:
+    name: Chambre Horizon
+    toCheck:
+      - "https://admin.booking.com/hotel/hoteladmin/ical.html?t=xxxx"
