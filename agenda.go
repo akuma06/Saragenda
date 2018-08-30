@@ -1,4 +1,4 @@
-package agenda
+package saragenda
 
 import (
 	"fmt"
@@ -35,15 +35,15 @@ func (chambre Chambre) String() string {
 	head := fmt.Sprintf("   (%s) Chambre '%s'   ", chambre.ID, chambre.Name)
 	reservations := fmt.Sprintf("   Réservations (%d)", len(chambre.Reservations))
 	tirets := "+"
-	for _ = range head {
+	for range head {
 		tirets += "-"
 	}
 	tirets += "+"
 	emptySpaces := ""
-	for _ = range head {
+	for range head {
 		emptySpaces += " "
 	}
-	for _ = range tirets[(1+len(reservations)):] {
+	for range tirets[(1+len(reservations)):] {
 		reservations += " "
 	}
 	return tirets+"\n|"+emptySpaces+"|\n|"+head+"|\n|"+emptySpaces+"|\n"+tirets+"\n|"+reservations+"|\n"+tirets
@@ -63,18 +63,23 @@ var store Storage
 
 var config Config
 
-func SetManager(conf Config, st Storage) {
+func SetManager(conf Config, st Storage) error {
+	if conf == nil || st == nil {
+		return errors.New("Nil parameters supplied to the Manager")
+	}
 	config = conf
 	store = st
-	initChambres()
+	err := initChambres()
+	return err
 }
 
-func initChambres() {
+func initChambres() error {
 	var chambres Chambres
 	err := config.UnmarshalKey("chambres", &chambres)
 	if err != nil {
 		fmt.Println("Can't read config")
 		fmt.Println(err)
+		return err
 	}
 	for _, chambre := range chambres {
 		err = store.AddChambre(chambre)
@@ -83,29 +88,39 @@ func initChambres() {
 			fmt.Println(err)
 		}
 	}
+	return nil
 }
 
-func LoadChambres() {
-	for key := range store.GetChambres() {
+func LoadChambres() error {
+	chambres, err := store.GetChambres()
+	if err != nil {
+		return err
+	}
+	for key := range chambres {
 		getReservations(key)
 	}
+	return nil
 }
 
-func GetChambres() Chambres {
+func GetChambres() (Chambres, error) {
 	return store.GetChambres()
 }
 
-func getReservations(name string) (chambre *Chambre) {
+func getReservations(name string) (*Chambre, error) {
 	chambre, err := store.GetChambre(name)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return nil, err
 	}
 	for _, toCheck := range chambre.ToCheck {
 		queryUrl(toCheck, chambre)
 	}
-	store.EditChambre(name, chambre)
-	return chambre
+	err = store.EditChambre(name, chambre)
+	if err != nil {
+		fmt.Println(err)
+		return chambre, err
+	}
+	return chambre, nil
 }
 
 func queryUrl(url string, chambre *Chambre) {
@@ -132,12 +147,13 @@ func queryUrl(url string, chambre *Chambre) {
 		debut, _ := time.Parse("20060102", event.ChildByName("DTSTART").Value)
 		fin, _ := time.Parse("20060102", event.ChildByName("DTEND").Value)
 		reservation :=  Reservation{0, debut, fin, event.ChildByName("SUMMARY").Value, []error{}}
-		checkDoubleTime(chambre, &reservation)
+		// checkDoubleTime(chambre, &reservation)
 		store.AddReservation(chambre.ID, &reservation)
 	}
 	return
 }
 
+/*
 func checkDoubleTime(chambre *Chambre, reservation *Reservation) {
 	for _, res := range chambre.Reservations {
 		if reservation.Debut.Sub(res.Debut) > 0 && res.Fin.Sub(reservation.Debut) > 0 { // reservation.Debut, res.Debut, reservation.Fin
@@ -146,4 +162,4 @@ func checkDoubleTime(chambre *Chambre, reservation *Reservation) {
 			store.EditReservation(chambre.ID, res.ID, res)
 		}
 	}
-}
+} */

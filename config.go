@@ -1,4 +1,4 @@
-package agenda
+package saragenda
 
 import (
 	"github.com/spf13/viper"

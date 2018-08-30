@@ -1,9 +1,9 @@
-package main
+package example
 
 import (
 	"fmt"
 
-	"Saragenda/agenda"
+	"Saragenda"
 	"github.com/spf13/viper"
 )
 
@@ -14,7 +14,13 @@ func main() {
 	if err != nil { // Handle errors reading the config file
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
-	agenda.SetManager(agenda.NewViperWrapper(), agenda.NewMemoryStore())
-	agenda.LoadChambres()
-	fmt.Printf("\n%v\n", agenda.GetChambres())
+	err = saragenda.SetManager(saragenda.NewViperWrapper(), saragenda.NewMemoryStore())
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = saragenda.LoadChambres()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("\n%v\n", saragenda.GetChambres())
 }

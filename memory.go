@@ -1,4 +1,4 @@
-package agenda
+package saragenda
 
 import (
 	"errors"
@@ -15,8 +15,8 @@ func NewMemoryStore() *MemoryStore {
 	}
 }
 
-func (m *MemoryStore) GetChambres() map[string]*Chambre {
-	return m.Chambres
+func (m *MemoryStore) GetChambres() (map[string]*Chambre, error) {
+	return m.Chambres, nil
 }
 
 func (m *MemoryStore) GetChambre(keyChambre string) (*Chambre, error) {

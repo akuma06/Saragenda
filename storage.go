@@ -1,7 +1,7 @@
-package agenda
+package saragenda
 
 type Storage interface {
-	GetChambres() map[string]*Chambre
+	GetChambres() (map[string]*Chambre, error)
 	AddChambre(chambre *Chambre) error
 	GetChambre(keyChambre string) (*Chambre, error)
 	EditChambre(keyChambre string, chambre *Chambre) error
