@@ -149,7 +149,10 @@ func queryUrl(url string, chambre *Chambre) {
 		fin, _ := time.Parse("20060102", event.ChildByName("DTEND").Value)
 		reservation :=  Reservation{0, debut, fin, event.ChildByName("SUMMARY").Value, []error{}}
 		// checkDoubleTime(chambre, &reservation)
-		store.AddReservation(chambre.ID, &reservation)
+		err := store.AddReservation(chambre.ID, &reservation)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 	return
 }
