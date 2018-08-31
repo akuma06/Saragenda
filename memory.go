@@ -79,11 +79,7 @@ func (m *MemoryStore) GetReservations(keyChambre string) (Reservations, error)  
 	if err != nil {
 		return nil, err
 	}
-	reservations := make(Reservations, len(chambre.Reservations))
-	for i := range chambre.Reservations {
-		reservations[i] = *chambre.Reservations[i]
-	}
-	return reservations, nil
+	return chambre.Reservations, nil
 }
 
 

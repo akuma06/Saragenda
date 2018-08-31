@@ -22,28 +22,29 @@ type Config interface {
 	UnmarshalKey(key string, rawVal interface{}) error
 }
 
-type Reservations []Reservation
+type Reservations []*Reservation
 
 type Chambre struct {
 	ID string
 	Name         string
-	Reservations []*Reservation
+	Reservations Reservations
 	ToCheck []string
 }
 
 func (chambre Chambre) String() string {
 	head := fmt.Sprintf("   (%s) Chambre '%s'   ", chambre.ID, chambre.Name)
-	reservations := fmt.Sprintf("   Réservations (%d)", len(chambre.Reservations))
+	reservations := fmt.Sprintf("Réservations (%d)", len(chambre.Reservations))
 	tirets := "+"
-	for range head {
-		tirets += "-"
-	}
-	tirets += "+"
 	emptySpaces := ""
 	for range head {
+		tirets += "-"
 		emptySpaces += " "
 	}
-	for range tirets[(1+len(reservations)):] {
+	tirets += "+"
+
+	nbResSpaces := len(reservations)+(len(emptySpaces)-len(reservations))/2
+	reservations = emptySpaces[nbResSpaces:] + reservations + emptySpaces[nbResSpaces:]
+	if nbResSpaces%2 == 0 {
 		reservations += " "
 	}
 	return tirets+"\n|"+emptySpaces+"|\n|"+head+"|\n|"+emptySpaces+"|\n"+tirets+"\n|"+reservations+"|\n"+tirets
