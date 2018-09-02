@@ -58,6 +58,10 @@ type BookingEvent struct {
 	event *ical.Node
 }
 
+func (b BookingEvent) Type() string {
+	return "booking"
+}
+
 func NewBookingEvent(event *ical.Node) *BookingEvent {
 	return &BookingEvent{event}
 }

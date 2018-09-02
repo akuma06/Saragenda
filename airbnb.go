@@ -178,5 +178,9 @@ func (a AirbnbEvent) TransactionId() string {
 	return names[2][1:(len(names[2])-1)]
 }
 
+func (a AirbnbEvent) Type() string {
+	return "airbnb"
+}
+
 
 
