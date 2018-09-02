@@ -115,7 +115,10 @@ func getReservations(name string) (*Chambre, error) {
 		return nil, err
 	}
 	for _, toCheck := range chambre.ToCheck {
-		queryUrl(toCheck, chambre)
+		err = queryUrl(toCheck, chambre)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 	err = store.EditChambre(name, chambre)
 	if err != nil {
