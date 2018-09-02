@@ -17,6 +17,7 @@ type Reservation struct {
 	Email string
 	Phone string
 	TransactionId string
+	Type string
 }
 
 type Config interface {
@@ -145,7 +146,7 @@ func queryUrl(urlToParse string, chambre *Chambre) error {
 	for _, event := range parser.Events() {
 		debut := event.Debut()
 		fin := event.Fin()
-		reservation :=  Reservation{0, debut, fin, event.Firstname(), event.Lastname(), event.Email(), event.Phone(), event.TransactionId()}
+		reservation :=  Reservation{0, debut, fin, event.Firstname(), event.Lastname(), event.Email(), event.Phone(), event.TransactionId(), event.Type()}
 		// checkDoubleTime(chambre, &reservation)
 		err := store.AddReservation(chambre.ID, &reservation)
 		if err != nil {
