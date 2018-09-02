@@ -2,11 +2,7 @@ package saragenda
 
 import (
 	"time"
-	"github.com/laurent22/ical-go"
 	"net/url"
-	"net/http"
-	"fmt"
-	"io/ioutil"
 	"strings"
 )
 
@@ -23,28 +19,6 @@ type EventParsed interface {
 	Email() string
 	Phone() string
 	TransactionId() string
-}
-
-func getVEventsFromIcal(icalUrl *url.URL) ([]*ical.Node, error) {
-	resp, err := http.Get(icalUrl.String())
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	calNodes, err := ical.ParseCalendar(correctIcal(string(body)))
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	return calNodes.ChildrenByName("VEVENT"), nil
 }
 
 func correctIcal(body string) string {

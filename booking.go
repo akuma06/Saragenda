@@ -5,6 +5,9 @@ import (
 	"time"
 	"strings"
 	"net/url"
+	"net/http"
+	"fmt"
+	"io/ioutil"
 )
 
 type BookingParser struct {
@@ -18,7 +21,7 @@ func (bp BookingParser) Events() []EventParsed {
 
 func (bp BookingParser) Parse(icalUrl *url.URL) error {
 	bp.URL = icalUrl
-	events, err := getVEventsFromIcal(icalUrl)
+	events, err := bp.LoadIcal(icalUrl)
 	if err != nil {
 		return err
 	}
@@ -27,6 +30,28 @@ func (bp BookingParser) Parse(icalUrl *url.URL) error {
 		bp.events[i] = NewBookingEvent(events[i])
 	}
 	return nil
+}
+
+func (bp BookingParser) LoadIcal(icalUrl *url.URL) ([]*ical.Node, error) {
+	resp, err := http.Get(icalUrl.String())
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	calNodes, err := ical.ParseCalendar(string(body))
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return calNodes.ChildrenByName("VEVENT"), nil
 }
 
 type BookingEvent struct {

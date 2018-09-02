@@ -5,6 +5,9 @@ import (
 	"time"
 	"github.com/laurent22/ical-go"
 	"strings"
+	"net/http"
+	"fmt"
+	"io/ioutil"
 )
 
 type AirbnbParser struct {
@@ -14,7 +17,7 @@ type AirbnbParser struct {
 
 func (ap AirbnbParser) Parse(icalUrl *url.URL) error {
 	ap.URL = icalUrl
-	events, err := getVEventsFromIcal(icalUrl)
+	events, err := ap.LoadIcal(icalUrl)
 	if err != nil {
 		return err
 	}
@@ -27,6 +30,44 @@ func (ap AirbnbParser) Parse(icalUrl *url.URL) error {
 
 func (ap AirbnbParser) Events() []EventParsed {
 	return ap.events
+}
+
+func (ap AirbnbParser) LoadIcal(icalUrl *url.URL) ([]*ical.Node, error) {
+	resp, err := http.Get(icalUrl.String())
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	calNodes, err := ical.ParseCalendar(ap.SanitizeDesc(string(body)))
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return calNodes.ChildrenByName("VEVENT"), nil
+}
+
+func (ap *AirbnbParser) SanitizeDesc(body string) string {
+	partOneDesc := strings.Split(body, "DESCRIPTION:")
+	result := make([]string, len(partOneDesc))
+		for i, part := range partOneDesc {
+			parts := strings.Split(part, "SUMMARY")
+			if len(parts) >= 2 {
+				parts[0] = strings.Replace(parts[0], " ", "", -1)
+				parts[0] = strings.Replace(parts[0], "\n", "", -1)
+				newLines := strings.Split(parts[0], "\\n")
+				parts[0] = strings.Join(newLines, "\n") + "END:DESCRIPTION\n"
+			}
+			result[i] = strings.Join(parts, "SUMMARY")
+		}
+	return strings.Join(result, "BEGIN:DESCRIPTION\n")
 }
 
 type AirbnbEvent struct {
