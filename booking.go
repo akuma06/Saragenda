@@ -72,6 +72,9 @@ func (b BookingEvent) Firstname() string  {
 			return ""
 		}
 		names := strings.Split(desc[1], " ")
+		if len(names) == 0 {
+			return ""
+		}
 		return names[0]
 	}
 	return ""
@@ -87,6 +90,9 @@ func (b BookingEvent) Lastname() string {
 			return ""
 		}
 		names := strings.Split(desc[1], " ")
+		if len(names) <= 1 {
+			return ""
+		}
 		return names[1]
 	}
 	return ""

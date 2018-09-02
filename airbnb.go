@@ -87,7 +87,7 @@ func (a AirbnbEvent) Firstname() string {
 		return ""
 	}
 	names := strings.Split(summary.Value, " ")
-	if len(names) <= 1 {
+	if len(names) < 1 {
 		return ""
 	}
 	return names[0]
@@ -102,7 +102,7 @@ func (a AirbnbEvent) Lastname() string {
 		return ""
 	}
 	names := strings.Split(summary.Value, " ")
-	if len(names) <= 1 {
+	if len(names) < 2 {
 		return ""
 	}
 	return names[1]
@@ -172,7 +172,7 @@ func (a AirbnbEvent) TransactionId() string {
 		return ""
 	}
 	names := strings.Split(summary.Value, " ")
-	if len(names) <= 2 {
+	if len(names) < 3 {
 		return ""
 	}
 	return names[2][1:(len(names[2])-1)]
