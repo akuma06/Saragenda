@@ -39,7 +39,7 @@ END:VEVENT`,
 func TestAirbnbEvent_Firstname(t *testing.T) {
 	tests := []struct {
 		name string
-		b    AirbnbEvent
+		b    *AirbnbEvent
 		want string
 	}{
 		{"empty", NewAirbnbEvent(getAirbnbNode("empty")), ""},
@@ -57,7 +57,7 @@ func TestAirbnbEvent_Firstname(t *testing.T) {
 func TestAirbnbEvent_Lastname(t *testing.T) {
 	tests := []struct {
 		name string
-		b    AirbnbEvent
+		b    *AirbnbEvent
 		want string
 	}{
 		{"empty", NewAirbnbEvent(getAirbnbNode("empty")), ""},
@@ -76,7 +76,7 @@ func TestAirbnbEvent_Debut(t *testing.T) {
 	debutTest, _ := time.Parse("02/01/2006", "03/09/2018")
 	tests := []struct {
 		name string
-		b    AirbnbEvent
+		b    *AirbnbEvent
 		want time.Time
 	}{
 		{"empty", NewAirbnbEvent(getAirbnbNode("empty")), time.Time{}},
@@ -95,7 +95,7 @@ func TestAirbnbEvent_Fin(t *testing.T) {
 	finTest, _ := time.Parse("02/01/2006", "04/09/2018")
 	tests := []struct {
 		name string
-		b    AirbnbEvent
+		b    *AirbnbEvent
 		want time.Time
 	}{
 		{"empty", NewAirbnbEvent(getAirbnbNode("empty")), time.Time{}},
@@ -124,7 +124,7 @@ func TestAirbnbEvent_Email(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			a := AirbnbEvent{
+			a := &AirbnbEvent{
 				event: tt.fields.event,
 			}
 			if got := a.Email(); got != tt.want {
@@ -148,7 +148,7 @@ func TestAirbnbEvent_Phone(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			a := AirbnbEvent{
+			a := &AirbnbEvent{
 				event: tt.fields.event,
 			}
 			if got := a.Phone(); got != tt.want {
@@ -172,7 +172,7 @@ func TestAirbnbEvent_TransactionId(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			a := AirbnbEvent{
+			a := &AirbnbEvent{
 				event: tt.fields.event,
 			}
 			if got := a.TransactionId(); got != tt.want {

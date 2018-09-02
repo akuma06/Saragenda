@@ -29,7 +29,7 @@ END:VEVENT`,
 func TestBookingEvent_Firstname(t *testing.T) {
 	tests := []struct {
 		name string
-		b    BookingEvent
+		b    *BookingEvent
 		want string
 	}{
 		{"empty", NewBookingEvent(getNode("empty")), ""},
@@ -47,7 +47,7 @@ func TestBookingEvent_Firstname(t *testing.T) {
 func TestBookingEvent_Lastname(t *testing.T) {
 	tests := []struct {
 		name string
-		b    BookingEvent
+		b    *BookingEvent
 		want string
 	}{
 		{"empty", NewBookingEvent(getNode("empty")), ""},
@@ -66,7 +66,7 @@ func TestBookingEvent_Debut(t *testing.T) {
 	debutTest, _ := time.Parse("02/01/2006", "28/08/2018")
 	tests := []struct {
 		name string
-		b    BookingEvent
+		b    *BookingEvent
 		want time.Time
 	}{
 		{"empty", NewBookingEvent(getNode("empty")), time.Time{}},
@@ -85,7 +85,7 @@ func TestBookingEvent_Fin(t *testing.T) {
 	finTest, _ := time.Parse("02/01/2006", "30/08/2018")
 	tests := []struct {
 		name string
-		b    BookingEvent
+		b    *BookingEvent
 		want time.Time
 	}{
 		{"empty", NewBookingEvent(getNode("empty")), time.Time{}},

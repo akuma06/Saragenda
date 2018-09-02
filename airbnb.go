@@ -15,7 +15,7 @@ type AirbnbParser struct {
 	events []EventParsed
 }
 
-func (ap AirbnbParser) Parse(icalUrl *url.URL) error {
+func (ap *AirbnbParser) Parse(icalUrl *url.URL) error {
 	ap.URL = icalUrl
 	events, err := ap.LoadIcal(icalUrl)
 	if err != nil {
@@ -54,7 +54,7 @@ func (ap AirbnbParser) LoadIcal(icalUrl *url.URL) ([]*ical.Node, error) {
 	return calNodes.ChildrenByName("VEVENT"), nil
 }
 
-func (ap *AirbnbParser) SanitizeDesc(body string) string {
+func (ap AirbnbParser) SanitizeDesc(body string) string {
 	partOneDesc := strings.Split(body, "DESCRIPTION:")
 	result := make([]string, len(partOneDesc))
 		for i, part := range partOneDesc {
@@ -74,8 +74,8 @@ type AirbnbEvent struct {
 	event *ical.Node
 }
 
-func NewAirbnbEvent(event *ical.Node) AirbnbEvent {
-	return AirbnbEvent{event}
+func NewAirbnbEvent(event *ical.Node) *AirbnbEvent {
+	return &AirbnbEvent{event}
 }
 
 func (a AirbnbEvent) Firstname() string {

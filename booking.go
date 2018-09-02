@@ -19,7 +19,7 @@ func (bp BookingParser) Events() []EventParsed {
 	return bp.events
 }
 
-func (bp BookingParser) Parse(icalUrl *url.URL) error {
+func (bp *BookingParser) Parse(icalUrl *url.URL) error {
 	bp.URL = icalUrl
 	events, err := bp.LoadIcal(icalUrl)
 	if err != nil {
@@ -58,8 +58,8 @@ type BookingEvent struct {
 	event *ical.Node
 }
 
-func NewBookingEvent(event *ical.Node) BookingEvent {
-	return BookingEvent{event}
+func NewBookingEvent(event *ical.Node) *BookingEvent {
+	return &BookingEvent{event}
 }
 
 func (b BookingEvent) Firstname() string  {
