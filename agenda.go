@@ -2,20 +2,18 @@ package saragenda
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"time"
 
-	"github.com/laurent22/ical-go"
 	"errors"
+	"net/url"
 )
 
 type Reservation struct {
 	ID uint
 	Debut       time.Time
 	Fin         time.Time
-	Description string
-	Errors []error
+	Firstname string
+	Lastname string
 }
 
 type Config interface {
@@ -66,7 +64,7 @@ var config Config
 
 func SetManager(conf Config, st Storage) error {
 	if conf == nil || st == nil {
-		return errors.New("Nil parameters supplied to the Manager")
+		return errors.New("nil parameters supplied to the Manager")
 	}
 	config = conf
 	store = st
@@ -124,38 +122,44 @@ func getReservations(name string) (*Chambre, error) {
 	return chambre, nil
 }
 
-func queryUrl(url string, chambre *Chambre) {
-	resp, err := http.Get(url)
+func queryUrl(urlToParse string, chambre *Chambre) error {
+	apiURL, err := url.Parse(urlToParse)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-		return
+	parser := getParser(apiURL)
+	if parser == nil {
+		return errors.New("couldn't find any parser for this url")
 	}
-
-	calNodes, err := ical.ParseCalendar(string(body))
+	err = parser.Parse(apiURL)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
-	for _, event := range calNodes.ChildrenByName("VEVENT") {
-		debut, _ := time.Parse("20060102", event.ChildByName("DTSTART").Value)
-		fin, _ := time.Parse("20060102", event.ChildByName("DTEND").Value)
-		reservation :=  Reservation{0, debut, fin, event.ChildByName("SUMMARY").Value, []error{}}
+	for _, event := range parser.Events() {
+		debut := event.Debut()
+		fin := event.Fin()
+		reservation :=  Reservation{0, debut, fin, event.Firstname(), event.Lastname()}
 		// checkDoubleTime(chambre, &reservation)
 		err := store.AddReservation(chambre.ID, &reservation)
 		if err != nil {
 			fmt.Println(err)
 		}
 	}
-	return
+	return nil
 }
+
+func getParser(apiUrl *url.URL) Parser {
+	switch apiUrl.Host {
+	case "admin.booking.com":
+		return &BookingParser{}
+	case "www.airbnb.fr":
+		return &AirbnbParser{}
+	}
+	return nil
+}
+
+
 
 /*
 func checkDoubleTime(chambre *Chambre, reservation *Reservation) {
