@@ -101,6 +101,9 @@ func (a AirbnbEvent) Email() string {
 	if email == nil {
 		return ""
 	}
+	if email.Value == "(aucunaliasd'e-maildisponible)" {
+		return ""
+	}
 	return email.Value
 }
 
