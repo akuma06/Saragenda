@@ -35,7 +35,7 @@ func (bp *BookingParser) Parse(icalUrl *url.URL) error {
 func (bp BookingParser) LoadIcal(icalUrl *url.URL) ([]*ical.Node, error) {
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", icalUrl.String(), nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36")
 
 	resp, err := client.Do(req)
 	if err != nil {
