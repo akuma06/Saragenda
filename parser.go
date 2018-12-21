@@ -20,6 +20,7 @@ type EventParsed interface {
 	Phone() string
 	TransactionId() string
 	Type() string
+	UID() string
 }
 
 func correctIcal(body string) string {

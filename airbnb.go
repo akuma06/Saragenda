@@ -186,5 +186,10 @@ func (a AirbnbEvent) Type() string {
 	return "airbnb"
 }
 
-
+func (a AirbnbEvent) UID() string {
+	if a.event == nil || a.event.ChildByName("UID") == nil {
+		return ""
+	}
+	return a.event.ChildByName("UID").Value
+}
 

@@ -135,3 +135,9 @@ func (b BookingEvent) Phone() string {
 func (b BookingEvent) TransactionId() string {
 	return ""
 }
+func (b BookingEvent) UID() string {
+	if b.event == nil || b.event.ChildByName("UID") == nil {
+		return ""
+	}
+	return b.event.ChildByName("UID").Value
+}
