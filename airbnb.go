@@ -109,6 +109,9 @@ func (a AirbnbEvent) Lastname() string {
 	if len(names) < 2 {
 		return ""
 	}
+	if names[1][0] == '(' { // In case there is no lastname, we don't want the airbnb ID
+		return ""
+	}
 	return names[1]
 }
 
@@ -187,9 +190,26 @@ func (a AirbnbEvent) Type() string {
 }
 
 func (a AirbnbEvent) UID() string {
-	if a.event == nil || a.event.ChildByName("UID") == nil {
+	if a.event == nil {
 		return ""
 	}
-	return a.event.ChildByName("UID").Value
+	summary := a.event.ChildByName("SUMMARY")
+	if summary == nil || summary.Value == "Not available" {
+		return ""
+	}
+	names := strings.Split(summary.Value, " ")
+	if len(names) < 2 {
+		return ""
+	}
+	if len(names) == 2 {
+		if len(names[1]) > 2 && names[1][0] == '(' {
+			return names[1][1:(len(names[1]) - 1)]
+		}
+		return ""
+	}
+	if len(names[2]) < 3 { // if it's just ()
+		return ""
+	}
+	return names[2][1:(len(names[1]) - 1)]
 }
 
