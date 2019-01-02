@@ -179,25 +179,6 @@ func (a AirbnbEvent) TransactionId() string {
 		return ""
 	}
 	names := strings.Split(summary.Value, " ")
-	if len(names) < 3 {
-		return ""
-	}
-	return names[2][1:(len(names[2])-1)]
-}
-
-func (a AirbnbEvent) Type() string {
-	return "airbnb"
-}
-
-func (a AirbnbEvent) UID() string {
-	if a.event == nil {
-		return ""
-	}
-	summary := a.event.ChildByName("SUMMARY")
-	if summary == nil || summary.Value == "Not available" {
-		return ""
-	}
-	names := strings.Split(summary.Value, " ")
 	if len(names) < 2 {
 		return ""
 	}
@@ -210,6 +191,16 @@ func (a AirbnbEvent) UID() string {
 	if len(names[2]) < 3 { // if it's just ()
 		return ""
 	}
-	return names[2][1:(len(names[1]) - 1)]
+	return names[2][1:(len(names[2])-1)]
 }
 
+func (a AirbnbEvent) Type() string {
+	return "airbnb"
+}
+
+func (a AirbnbEvent) UID() string {
+	if a.event == nil || a.event.ChildByName("UID") == nil {
+		return ""
+	}
+	return a.event.ChildByName("UID").Value
+}
