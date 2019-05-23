@@ -21,11 +21,21 @@ DESCRIPTION:CHECKIN: 03/09/2018\nCHECKOUT: 04/09/2018\nNIGHTS: 1\nPHONE:
 SUMMARY:Paul Salmon (HDMTRFM9VC)
 LOCATION:Les chambres du soleil levant
 END:VEVENT`,
+	"valid-nomail": `BEGIN:VEVENT
+DTEND;VALUE=DATE:20180904
+DTSTART;VALUE=DATE:20180903
+UID:1418fb94e984-4e06061a747a4e4680112c2ed2f01919@airbnb.com
+DESCRIPTION:CHECKIN: 03/09/2018\nCHECKOUT: 04/09/2018\nNIGHTS: 1\nPHONE: 
+ +33 6 77 22 33 09\nEMAIL: (aucun alias d'e-mail disponible)\nPRO
+ PERTY: Les chambres du soleil levant\n
+SUMMARY:Paul Salmon (HDMTRFM9VC)
+LOCATION:Les chambres du soleil levant
+END:VEVENT`,
 		"notvalid": `BEGIN:VEVENT
-DTEND;VALUE=DATE:20180826
-DTSTART;VALUE=DATE:20180824
-UID:6fec1092d3fa-c9e130257954d2b42ed9e1995131731a@airbnb.com
-SUMMARY:Not available
+DTEND;VALUE=DATE:20180529
+DTSTART;VALUE=DATE:20180528
+UID:6fec1092d3fa-6ef58296063adad96175f163be728624@airbnb.com
+SUMMARY:Airbnb (Not available)
 END:VEVENT`,
 	}
 	node, err := ical.ParseCalendar(correctIcal(nodeStrings[name]))
@@ -44,6 +54,7 @@ func TestAirbnbEvent_Firstname(t *testing.T) {
 	}{
 		{"empty", NewAirbnbEvent(getAirbnbNode("empty")), ""},
 		{"valid", NewAirbnbEvent(getAirbnbNode("valid")), "Paul"},
+		{"notvalid", NewAirbnbEvent(getAirbnbNode("notvalid")), ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -62,6 +73,7 @@ func TestAirbnbEvent_Lastname(t *testing.T) {
 	}{
 		{"empty", NewAirbnbEvent(getAirbnbNode("empty")), ""},
 		{"valid", NewAirbnbEvent(getAirbnbNode("valid")), "Salmon"},
+		{"notvalid", NewAirbnbEvent(getAirbnbNode("notvalid")), ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -121,6 +133,7 @@ func TestAirbnbEvent_Email(t *testing.T) {
 	}{
 		{"empty", fields{getAirbnbNode("empty")}, ""},
 		{"valid", fields{getAirbnbNode("valid")}, "paul-0z7aghtrxyw80cec@guest.airbnb.com"},
+		{"valid-nomail", fields{getAirbnbNode("valid-nomail")}, ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

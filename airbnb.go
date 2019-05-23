@@ -87,7 +87,7 @@ func (a AirbnbEvent) Firstname() string {
 		return ""
 	}
 	summary := a.event.ChildByName("SUMMARY")
-	if summary == nil || summary.Value == "Not available" {
+	if summary == nil || summary.Value == "Not available" || summary.Value == "Airbnb (Not available)" {
 		return ""
 	}
 	names := strings.Split(summary.Value, " ")
@@ -102,7 +102,7 @@ func (a AirbnbEvent) Lastname() string {
 		return ""
 	}
 	summary := a.event.ChildByName("SUMMARY")
-	if summary == nil || summary.Value == "Not available" {
+	if summary == nil || summary.Value == "Not available" || summary.Value == "Airbnb (Not available)" {
 		return ""
 	}
 	names := strings.Split(summary.Value, " ")
@@ -149,7 +149,7 @@ func (a AirbnbEvent) Email() string {
 	if email == nil {
 		return ""
 	}
-	if email.Value == "(aucunaliasd'e-maildisponible)" {
+	if email.Value == "(aucunaliasd'e-maildisponible)" || email.Value == "(aucun alias d'e-mail disponible)" {
 		return ""
 	}
 	return email.Value
