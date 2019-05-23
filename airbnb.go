@@ -175,7 +175,7 @@ func (a AirbnbEvent) TransactionId() string {
 		return ""
 	}
 	summary := a.event.ChildByName("SUMMARY")
-	if summary == nil ||summary.Value == "Not available" {
+	if summary == nil || summary.Value == "Not available" || summary.Value == "Airbnb (Not available)" {
 		return ""
 	}
 	names := strings.Split(summary.Value, " ")
