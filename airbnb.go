@@ -94,7 +94,13 @@ func (a AirbnbEvent) Firstname() string {
 	if len(names) < 1 {
 		return ""
 	}
-	return names[0]
+	until := len(names)
+	if len(names) >= 3 {
+		until -= 2
+	} else {
+		until -= 1
+	}
+	return strings.Join(names[:until], " ")
 }
 
 func (a AirbnbEvent) Lastname() string {
@@ -112,7 +118,7 @@ func (a AirbnbEvent) Lastname() string {
 	if names[1][0] == '(' { // In case there is no lastname, we don't want the airbnb ID
 		return ""
 	}
-	return names[1]
+	return names[(len(names) - 2)]
 }
 
 func (a AirbnbEvent) Debut() time.Time {
@@ -182,16 +188,13 @@ func (a AirbnbEvent) TransactionId() string {
 	if len(names) < 2 {
 		return ""
 	}
-	if len(names) == 2 {
-		if len(names[1]) > 2 && names[1][0] == '(' {
-			return names[1][1:(len(names[1]) - 1)]
+	if len(names) >= 2 {
+		index := len(names) - 1
+		if len(names[index]) > 2 && names[index][0] == '(' {
+			return names[index][1:(len(names[index]) - 1)]
 		}
-		return ""
 	}
-	if len(names[2]) < 3 { // if it's just ()
-		return ""
-	}
-	return names[2][1:(len(names[2])-1)]
+	return ""
 }
 
 func (a AirbnbEvent) Type() string {

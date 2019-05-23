@@ -15,7 +15,7 @@ func getNode(name string) *ical.Node {
 DTSTART;VALUE=DATE:20180828
 DTEND;VALUE=DATE:20180830
 UID:49cbd9bb67c47200868a38bf20dd5e54@booking.com
-SUMMARY: CLOSED - Laure Blanche
+SUMMARY: CLOSED - Laure Poli Blanche
 END:VEVENT`,
 	}
 	node, err := ical.ParseCalendar(nodeStrings[name])
@@ -33,7 +33,7 @@ func TestBookingEvent_Firstname(t *testing.T) {
 		want string
 	}{
 		{"empty", NewBookingEvent(getNode("empty")), ""},
-		{"valid", NewBookingEvent(getNode("valid")), "Laure"},
+		{"valid", NewBookingEvent(getNode("valid")), "Laure Poli"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

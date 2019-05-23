@@ -18,7 +18,7 @@ UID:1418fb94e984-4e06061a747a4e4680112c2ed2f01919@airbnb.com
 DESCRIPTION:CHECKIN: 03/09/2018\nCHECKOUT: 04/09/2018\nNIGHTS: 1\nPHONE: 
  +33 6 77 22 33 09\nEMAIL: paul-0z7aghtrxyw80cec@guest.airbnb.com\nPRO
  PERTY: Les chambres du soleil levant\n
-SUMMARY:Paul Salmon (HDMTRFM9VC)
+SUMMARY:Paul Mora Salmon (HDMTRFM9VC)
 LOCATION:Les chambres du soleil levant
 END:VEVENT`,
 	"valid-nomail": `BEGIN:VEVENT
@@ -28,7 +28,7 @@ UID:1418fb94e984-4e06061a747a4e4680112c2ed2f01919@airbnb.com
 DESCRIPTION:CHECKIN: 03/09/2018\nCHECKOUT: 04/09/2018\nNIGHTS: 1\nPHONE: 
  +33 6 77 22 33 09\nEMAIL: (aucun alias d'e-mail disponible)\nPRO
  PERTY: Les chambres du soleil levant\n
-SUMMARY:Paul Salmon (HDMTRFM9VC)
+SUMMARY:Paul Mora Salmon (HDMTRFM9VC)
 LOCATION:Les chambres du soleil levant
 END:VEVENT`,
 		"notvalid": `BEGIN:VEVENT
@@ -53,7 +53,7 @@ func TestAirbnbEvent_Firstname(t *testing.T) {
 		want string
 	}{
 		{"empty", NewAirbnbEvent(getAirbnbNode("empty")), ""},
-		{"valid", NewAirbnbEvent(getAirbnbNode("valid")), "Paul"},
+		{"valid", NewAirbnbEvent(getAirbnbNode("valid")), "Paul Mora"},
 		{"notvalid", NewAirbnbEvent(getAirbnbNode("notvalid")), ""},
 	}
 	for _, tt := range tests {

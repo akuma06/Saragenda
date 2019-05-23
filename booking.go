@@ -83,7 +83,7 @@ func (b BookingEvent) Firstname() string  {
 		if len(names) == 0 {
 			return ""
 		}
-		return names[0]
+		return strings.Join(names[:len(names) - 1], " ")
 	}
 	return ""
 }
@@ -101,7 +101,7 @@ func (b BookingEvent) Lastname() string {
 		if len(names) <= 1 {
 			return ""
 		}
-		return names[1]
+		return names[len(names) - 1]
 	}
 	return ""
 }
